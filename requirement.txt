@@ -1,0 +1,10 @@
+pandas==1.5.3
+python-dotenv
+langchain==0.1.0
+crewAI==0.5.0
+langchain-experimental
+langchain-openai
+openpyxl
+tabulate
+pandasai==2.2.5
+streamlit
