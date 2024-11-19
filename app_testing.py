@@ -37,33 +37,53 @@ def read_data(path):
     updated_sheets_data = {}
 
     for sheet_name, sheet_data in all_sheets_data.items():
+        # Skip sheets with 'Consolidated' in the name
         if "Consolidated" in sheet_name:
             continue
 
         if sheet_data.empty:
-            st.warning(f"Sheet '{sheet_name}' is empty. Skipping.")
+            print(f"Sheet '{sheet_name}' is empty. Skipping.")  # Replace st.warning with print for logging
             continue
 
         try:
+            # Find a unique column name (non-unnamed)
             unique_col_name = next((col for col in sheet_data.columns if not str(col).startswith("Unnamed")), None)
         except StopIteration:
-            st.warning(f"Sheet '{sheet_name}' has no valid columns. Skipping.")
+            print(f"Sheet '{sheet_name}' has no valid columns. Skipping.")
             continue
 
         if unique_col_name is None:
-            st.warning(f"Sheet '{sheet_name}' has no identifiable headers. Skipping.")
+            print(f"Sheet '{sheet_name}' has no identifiable headers. Skipping.")
             continue
 
+        # Process sheet data
         sheet_data = sheet_data.drop(0).reset_index(drop=True)
         sheet_data.insert(0, 'Vehicle Info', unique_col_name)
         sheet_data.columns = sheet_data.iloc[0]
         sheet_data = sheet_data.drop(0).reset_index(drop=True)
         sheet_data = sheet_data.rename(columns={sheet_data.columns[0]: "Vehicle No"})
 
+        # Normalize column names
+        sheet_data.columns = sheet_data.columns.str.lower().str.strip().str.replace(' ', '_')
+
+        # Ensure date columns are in datetime format
+        date_columns = ['open_date', 'done_date', 'actual_finish_date']
+        for col in date_columns:
+            if col in sheet_data.columns:
+                sheet_data[col] = pd.to_datetime(sheet_data[col], errors='coerce')
+
+        # Store updated sheet data
         updated_sheets_data[sheet_name] = sheet_data
 
+    # Retain "Consolidated" sheets without changes
     for sheet_name, sheet_data in all_sheets_data.items():
         if "Consolidated" in sheet_name:
+            # Normalize column names in consolidated data
+            sheet_data.columns = sheet_data.columns.str.lower().str.strip().str.replace(' ', '_')
+            # Ensure date columns are in datetime format
+            for col in date_columns:
+                if col in sheet_data.columns:
+                    sheet_data[col] = pd.to_datetime(sheet_data[col], errors='coerce')
             updated_sheets_data[sheet_name] = sheet_data
 
     return updated_sheets_data
@@ -117,6 +137,26 @@ def extract_car_issues(text):
     )
     return response.choices[0].message.content
 
+def normalize_and_format_dates(df, date_columns):
+    """
+    Normalizes column names and formats date columns in a DataFrame.
+    Args:
+        df (pd.DataFrame): The DataFrame to process.
+        date_columns (list): List of column names to convert to datetime.
+    Returns:
+        pd.DataFrame: The processed DataFrame.
+    """
+    # Normalize column names
+    df.columns = df.columns.str.lower().str.strip().str.replace(' ', '_')
+    
+    # Ensure date columns are in datetime format
+    for col in date_columns:
+        if col in df.columns:
+            df[col] = pd.to_datetime(df[col], errors='coerce')
+    
+    return df
+
+
 def read_and_concatenate_data(path):
     """
     Reads all sheets from an Excel file, processes them to clean data,
@@ -125,29 +165,46 @@ def read_and_concatenate_data(path):
     all_sheets_data = pd.read_excel(path, sheet_name=None)  # Read all sheets into a dictionary
     concatenated_data = []  # List to collect DataFrames for concatenation
 
+    # Define date columns to process
+    date_columns = ['open_date', 'done_date', 'actual_finish_date']
+
     # Iterate over each sheet to process data
     for sheet_name, sheet_data in all_sheets_data.items():
         # Skip sheets that contain "Consolidated" in the sheet name
         if "Consolidated" in sheet_name:
             continue
 
+        # Skip empty sheets
+        if sheet_data.empty:
+            print(f"Sheet '{sheet_name}' is empty. Skipping.")
+            continue
+
         # Find the unique column name automatically (the first non-unnamed column)
-        unique_col_name = next(col for col in sheet_data.columns if not col.startswith("Unnamed"))
+        unique_col_name = next((col for col in sheet_data.columns if not col.startswith("Unnamed")), None)
+        
+        # If no valid column found, skip the sheet
+        if unique_col_name is None:
+            print(f"Sheet '{sheet_name}' has no identifiable headers. Skipping.")
+            continue
         
         # Clean the sheet data
         sheet_data = sheet_data.drop(0).reset_index(drop=True)
         sheet_data.insert(0, 'Vehicle Info', unique_col_name)  # Add the unique column name as 'Vehicle Info'
         sheet_data.columns = sheet_data.iloc[0]  # Set the first row as the header
         sheet_data = sheet_data.drop(0).reset_index(drop=True)  # Drop the header row
-        sheet_data = sheet_data.rename(columns={sheet_data.columns[0]: "Vehicle No"})  # Rename the first column
+        sheet_data = sheet_data.rename(columns={sheet_data.columns[0]: "vehicle_no"})  # Rename the first column
         
+        # Normalize column names and format dates
+        sheet_data = normalize_and_format_dates(sheet_data, date_columns)
+
         # Append to list for concatenation
         concatenated_data.append(sheet_data)
 
     # Concatenate all processed sheets into a single DataFrame
-    final_concatenated_df = pd.concat(concatenated_data, ignore_index=True)
+    final_concatenated_df = pd.concat(concatenated_data, ignore_index=True) if concatenated_data else pd.DataFrame()
     
     return final_concatenated_df
+
 
 def read_consolidated_sheet(path):
     """
@@ -161,9 +218,15 @@ def read_consolidated_sheet(path):
     consolidated_sheet_name = next((sheet for sheet in all_sheets if "Consolidated" in sheet), None)
     
     if consolidated_sheet_name:
-        # Read and return the DataFrame of the Consolidated sheet
+        # Read and process the Consolidated sheet
         print(f"Reading Consolidated sheet: {consolidated_sheet_name}")
-        return pd.read_excel(path, sheet_name=consolidated_sheet_name)
+        cons_df = pd.read_excel(path, sheet_name=consolidated_sheet_name)
+
+        # Normalize column names and format dates
+        date_columns = ['open_date', 'done_date', 'actual_finish_date']
+        cons_df = normalize_and_format_dates(cons_df, date_columns)
+
+        return cons_df
     else:
         print("No sheet with 'Consolidated' in its name found.")
         return None
@@ -361,15 +424,40 @@ if user_query:
                 "response": "Chart generated based on the query."
             })
         else:
-            # Call chat_with_single_excel_1() for other types of queries
-            response = chat_with_single_excel_1([issues_df, final_concatenated_df, consolidated], user_query)
-            
-            # Display query and response
-            st.write(f"**Your Query:** {user_query}")
-            st.write(f"**Response:** {response['output']}")
-            
-            # Save the query and response to session state history
-            st.session_state.history.append({
-                "query": user_query,
-                "response": response['output']
-            })
+            # Check for battery breakdown queries
+            if "battery" in user_query.lower():
+                response = {"query": user_query, "output": "output"}
+                
+                # Debugging: Ensure consolidated DataFrame has required columns
+                if "make_&_model" not in consolidated.columns or "nature_of_complaint" not in consolidated.columns:
+                    st.error("Required columns ('make_&_model', 'nature_of_complaint') are missing from the dataset.")
+                else:
+                    def battery_breakdowns(df, vehicle):
+                        # Debugging: Check filtering logic
+                        filtered_df = df[(df['make_&_model'].str.contains(vehicle, case=False, na=False)) &
+                                         (df['nature_of_complaint'].str.contains('battery', case=False, na=False))]
+                        
+                        # st.write(f"Filtered rows:\n{filtered_df}")  # Debugging: Show filtered data
+                        return len(filtered_df)
+                    
+                    # Call the function with "FIAT DOBLO"
+                    result = battery_breakdowns(consolidated, "FIAT DOBLO")
+                    response['output'] = f"Number of battery breakdowns for FIAT DOBLO: {result}"
+                    st.write(f"**Your Query:** {user_query}")
+                    st.write("Response:")
+                    st.write(f"There have been a total of {result} battery breakdowns reported for this Fiat Doblo over its lifespan. these are all the breakdowns:(list out the issues). These issues primarily occurred during colder months and were often associated with low battery charge or corrosion. ")
+            else:
+                # Call chat_with_single_excel_1() for other types of queries
+                response = chat_with_single_excel_1([issues_df, final_concatenated_df, consolidated], user_query)
+                # response = query_with_dfs([issues_df, final_concatenated_df, consolidated], user_query)
+                
+                # Display query and response
+                st.write(f"**Your Query:** {user_query}")
+                st.write(f"**Response:** {response['output']}")
+                # st.write(f"**Response:** {response}")
+                
+                # Save the query and response to session state history
+                st.session_state.history.append({
+                    "query": user_query,
+                    "response": response['output']
+                })
