@@ -263,6 +263,14 @@ Power Train & Engine: 12 faults
 Other Maintenance: 8 faults
 Brake System: 7 faults
 These issues suggest a pattern of electrical and mechanical challenges over the vehicle's lifespan."
+
+Query: At the 3rd year, what are the frequent faults? 
+Answer: In the 3rd year of the vehicle's usage, the frequent faults recorded include:
+water sealing - 5 issues/faults
+power system - 4 issues/faults
+lighting system - 3 issues/faults
+These issues indicate that by the 3rd year, routine maintenance was increasingly required for wear-related components.
+
 When analyzing a query, follow these rules and ensure every response maintains consistency in tone, style, and structure. Focus only on the final answers with accurate and detailed insights."""
 
     messages = [
