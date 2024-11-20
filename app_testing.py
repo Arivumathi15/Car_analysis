@@ -398,15 +398,16 @@ if consolidated is not None:
 # Query section
 st.markdown('<h2 class="sub-header">QuickLens Query</h2>', unsafe_allow_html=True)
 user_query = st.text_input("Enter your query:")
+updated_query = user_query + "if a vehicle model is specified in the query, then give a response to the query or give response with 'FIAT DOBLO' model"
 
-if user_query:
+if updated_query:
     with st.spinner("Processing your query..."):
         # Check if the query is related to charts or graphs
         visualization_keywords = ["chart", "graph", "plot", "visualize", "visualization"]
         
         if any(keyword in user_query.lower() for keyword in visualization_keywords):
             # Call the generate_chart() function for visualization-related queries
-            chart_response = generate_chart([issues_df, final_concatenated_df, consolidated], user_query)
+            chart_response = generate_chart([issues_df, final_concatenated_df, consolidated], updated_query)
             
             # Display the generated chart
             st.write(f"**Your Query:** {user_query}")
@@ -448,7 +449,7 @@ if user_query:
                     st.write(f"There have been a total of {result} battery breakdowns reported for this Fiat Doblo over its lifespan. These issues primarily occurred during colder months and were often associated with low battery charge or corrosion. ")
             else:
                 # Call chat_with_single_excel_1() for other types of queries
-                response = chat_with_single_excel_1([issues_df, final_concatenated_df, consolidated], user_query)
+                response = chat_with_single_excel_1([issues_df, final_concatenated_df, consolidated], updated_query)
                 # response = query_with_dfs([issues_df, final_concatenated_df, consolidated], user_query)
                 
                 # Display query and response
