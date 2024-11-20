@@ -241,35 +241,32 @@ def chat_with_single_excel_1(df, query):
         allow_dangerous_code=True  # Opt-in to allow dangerous code execution
     )
 
-    messages = [
-        {"role": "System", "content": """your work is to find the answer using two dataframes, you need to focus more on first dataset, if date or other data is needed 
-         then check with second dataset. give a proper correct answer,if fault present in query you need to focus car faults not servicing. you need to think as a data 
-         analyst and experienced Mechanic. If the query has fault, you have to focus on faults, and scheduled servies, documentation are not faults. it it planned events do skip it.
-         and only show the answers don't show the python code or instructions.
-         Here are some example query and answer:
+    content = """As a data analyst and experienced mechanic, your task is to analyze the given data and provide concise, accurate, and professional answers based on the datasets provided. Your focus should be:
 
-         query: How many battery breakdowns are there within the lifespan of this Fiat Doblo? 
-         answer: There have been a total of 76 battery breakdowns reported for this Fiat Doblo over its lifespan. these are all the breakdowns:(list out the issues). These issues primarily occurred during colder months and were often associated with low battery charge or corrosion.
-         query: What are the top 3 faults that occurred for this vehicle? 
-         action: for this question search the faults in 'nature_of_complaint' column don't go with other columns.
-         answer: The top 3 most frequent faults reported for this Fiat Doblo are:
-                 Power Train & Engine - 12 issues/faults
-                 Other Maintenance - 8 issues/faults
-                 Break system - 7 issues/faults
-                 These issues suggest a pattern of electrical and mechanical challenges over the vehicle's lifespan.
-         query: At the 3rd year, what are the frequent faults? 
-         Action: for this question search the asnwer in 'nature_of_complaint' column don't search in fault_codes
-         answer: In the 3rd year of the vehicle's usage, the frequent faults recorded include:
-                water sealing - 5 issues/faults
-                power system - 4 issues/faults
-                lighting system - 3 issues/faults
-                These issues indicate that by the 3rd year, routine maintenance was increasingly required for wear-related components.
-         query: What is the breakdown count due to overheating? 
-         answer: There have been 54 breakdowns attributed to overheating across the vehicle's service history. (list out some example breakdown complaints. and don't show the python codes)
-         query: What is the average visit for servicing in a year?
-         answer: (you can get the total service visits from Scheduled Services in issues_df) Based on the available data, there have been a total of 36 service visits reported for this vehicle over a period of 3 years. Therefore, the average number of service visits per year for this vehicle is 12 visits.
-         
-         These are all the sample query and asnwers, you have to give a proper answer."""},
+Prioritize information from the first dataset. Refer to the second dataset only when additional details (e.g., date or other context) are necessary.
+Address faults specifically—ignore scheduled services, planned events, or documentation unless explicitly relevant to the query.
+Base fault analysis primarily on the 'nature_of_complaint' column unless instructed otherwise. Ignore unrelated columns.
+Do not include Python code or explanations about how the answer was derived. Only provide the final answer.
+Response Format:
+For fault-related questions, include:
+
+A total count or summary of issues, if applicable.
+A brief description or list of fault types and patterns observed.
+For example:
+Query: "How many battery breakdowns are there within the lifespan of this Fiat Doblo?"
+Answer: "There have been a total of 76 battery breakdowns reported for this Fiat Doblo over its lifespan. These issues primarily occurred during colder months and were often associated with low battery charge or corrosion."
+
+Query: "What are the top 3 faults that occurred for this vehicle?"
+Answer: "The top 3 most frequent faults reported for this Fiat Doblo are:
+
+Power Train & Engine: 12 faults
+Other Maintenance: 8 faults
+Brake System: 7 faults
+These issues suggest a pattern of electrical and mechanical challenges over the vehicle's lifespan."
+When analyzing a query, follow these rules and ensure every response maintains consistency in tone, style, and structure. Focus only on the final answers with accurate and detailed insights."""
+
+    messages = [
+        {"role": "System", "content": content},
         {"role": "Data Analyst", "content": query}
     ]
 
