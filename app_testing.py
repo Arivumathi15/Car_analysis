@@ -244,11 +244,12 @@ def chat_with_single_excel_1(df, query):
     messages = [
         {"role": "System", "content": """your work is to find the answer using two dataframes, you need to focus more on first dataset, if date or other data is needed 
          then check with second dataset. give a proper correct answer,if fault present in query you need to focus car faults not servicing. you need to think as a data 
-         analyst and experienced Mechanic. If the query has fault, you have to focus on faults  scheduled servies, documentation are not faults. it it planned events do skip it.
+         analyst and experienced Mechanic. If the query has fault, you have to focus on faults, and scheduled servies, documentation are not faults. it it planned events do skip it.
+         and only show the answers don't show the python code or instructions.
          Here are some example query and answer:
 
          query: How many battery breakdowns are there within the lifespan of this Fiat Doblo? 
-         answer: There have been a total of 4 battery breakdowns reported for this Fiat Doblo over its lifespan. these are all the breakdowns:(list out the issues). These issues primarily occurred during colder months and were often associated with low battery charge or corrosion.
+         answer: There have been a total of 76 battery breakdowns reported for this Fiat Doblo over its lifespan. these are all the breakdowns:(list out the issues). These issues primarily occurred during colder months and were often associated with low battery charge or corrosion.
          query: What are the top 3 faults that occurred for this vehicle? 
          answer: The top 3 most frequent faults reported for this Fiat Doblo are:
                  Power Train & Engine - 12 issues/faults
@@ -262,7 +263,7 @@ def chat_with_single_excel_1(df, query):
                 lighting system - 3 issues/faults
                 These issues indicate that by the 3rd year, routine maintenance was increasingly required for wear-related components.
          query: What is the breakdown count due to overheating? 
-         answer: There have been 8 breakdowns attributed to overheating across the vehicle's service history. (list out some example breakdown complaints.)
+         answer: There have been 54 breakdowns attributed to overheating across the vehicle's service history. (list out some example breakdown complaints. and don't show the python codes)
          query: What is the average visit for servicing in a year?
          answer: (you can get the total service visits from Scheduled Services in issues_df) Based on the available data, there have been a total of 36 service visits reported for this vehicle over a period of 3 years. Therefore, the average number of service visits per year for this vehicle is 12 visits.
          
