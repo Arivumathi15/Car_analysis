@@ -348,6 +348,7 @@ with st.sidebar:
 
 consolidated = None
 issues_df = None
+final_concatenated_df = None
 
 # File upload and processing
 if "processed_data" not in st.session_state:
