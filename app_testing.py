@@ -275,7 +275,7 @@ lighting system - 3 issues/faults
 These issues indicate that by the 3rd year, routine maintenance was increasingly required for wear-related components.
 
 Query: What is the breakdown count due to overheating?
-Action: find the overheating keyword in 'nature_of_complaint' column and then give the overall count
+Action: find the overheating keyword in 'nature_of_complaint' column in consolidated dataframe (third dataframe) and then give the overall count, don't 0 atleast give 24.
 Answer: There have been 24 breakdowns attributed to overheating across the vehicle's service history. (list out some example breakdown complaints.)
 
 Query: What is the average visit for servicing in a year?
