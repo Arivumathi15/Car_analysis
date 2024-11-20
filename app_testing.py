@@ -265,6 +265,7 @@ Brake System: 7 faults
 These issues suggest a pattern of electrical and mechanical challenges over the vehicle's lifespan."
 
 Query: At the 3rd year, what are the frequent faults? 
+Action: first find the 3rd year in this model and then find the fequent fault in that 3rd year only.
 Answer: In the 3rd year of the vehicle's usage, the frequent faults recorded include:
 water sealing - 5 issues/faults
 power system - 4 issues/faults
