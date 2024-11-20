@@ -425,7 +425,7 @@ if user_query:
             })
         else:
             # Check for battery breakdown queries
-            if "How many battery breakdowns are there within the lifespan of this Fiat Doblo" in user_query.lower():
+            if "battery" in user_query.lower():
                 response = {"query": user_query, "output": "output"}
                 
                 # Debugging: Ensure consolidated DataFrame has required columns
