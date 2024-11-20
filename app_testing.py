@@ -394,7 +394,6 @@ if consolidated is not None:
     st.markdown('<h2 class="sub-header">Vehicle Information</h2>', unsafe_allow_html=True)
     vehicle_info = consolidated[['vehicle_no', 'make_&_model']].drop_duplicates(subset='vehicle_no')
     st.dataframe(vehicle_info, use_container_width=True)
-    st.dataframe(issues_df)
 
 # Query section
 st.markdown('<h2 class="sub-header">QuickLens Query</h2>', unsafe_allow_html=True)
