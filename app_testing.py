@@ -257,6 +257,7 @@ def chat_with_single_excel_1(df, query):
                  Break system - 7 issues/faults
                  These issues suggest a pattern of electrical and mechanical challenges over the vehicle's lifespan.
          query: At the 3rd year, what are the frequent faults? 
+         Action: for this question search the asnwer in 'nature_of_complaint' column don't search in fault_codes
          answer: In the 3rd year of the vehicle's usage, the frequent faults recorded include:
                 water sealing - 5 issues/faults
                 power system - 4 issues/faults
