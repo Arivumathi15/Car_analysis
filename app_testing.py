@@ -252,11 +252,13 @@ For fault-related questions, include:
 
 A total count or summary of issues, if applicable.
 A brief description or list of fault types and patterns observed.
+
 For example:
 Query: "How many battery breakdowns are there within the lifespan of this Fiat Doblo?"
 Answer: "There have been a total of 76 battery breakdowns reported for this Fiat Doblo over its lifespan. These issues primarily occurred during colder months and were often associated with low battery charge or corrosion."
 
 Query: "What are the top 3 faults that occurred for this vehicle?"
+Action: you can find this answer using issues_df (dataframe1)
 Answer: "The top 3 most frequent faults reported for this Fiat Doblo are:
 
 Power Train & Engine: 12 faults
@@ -271,6 +273,14 @@ water sealing - 5 issues/faults
 power system - 4 issues/faults
 lighting system - 3 issues/faults
 These issues indicate that by the 3rd year, routine maintenance was increasingly required for wear-related components.
+
+Query: What is the breakdown count due to overheating?
+Action: find the overheating keyword in 'nature_of_complaint' column and then give the overall count
+Answer: There have been 24 breakdowns attributed to overheating across the vehicle's service history. (list out some example breakdown complaints.)
+
+Query: What is the average visit for servicing in a year?
+Action: you can get the total service visits from Scheduled Services in issues_df
+Answer: Based on the available data, there have been a total of 36 service visits reported for this vehicle over a period of 3 years. Therefore, the average number of service visits per year for this vehicle is 12 visits.
 
 When analyzing a query, follow these rules and ensure every response maintains consistency in tone, style, and structure. Focus only on the final answers with accurate and detailed insights."""
 
