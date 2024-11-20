@@ -398,8 +398,7 @@ if consolidated is not None:
 # Query section
 st.markdown('<h2 class="sub-header">QuickLens Query</h2>', unsafe_allow_html=True)
 user_query = st.text_input("Enter your query:")
-updated_query = user_query + "if a vehicle model is specified in the query, then give a response to the query or give response with 'FIAT DOBLO' model"
-
+updated_query = "if a vehicle model is specified in the query, then give a response to the query or go with the common most model from make_&_model colum" + user_query 
 if updated_query:
     with st.spinner("Processing your query..."):
         # Check if the query is related to charts or graphs
