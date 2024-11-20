@@ -105,7 +105,7 @@ def consolidate_nature_of_complaint(path):
         print(f"Processing sheet: {sheet_name}")
         
         # Check if 'Nature of Complaint' column exists
-        if 'Nature of Complaint' in sheet_data.columns:
+        if 'nature_of_complaint' in sheet_data.columns:
             # Extend the list with the column's values (drop NaN values if necessary)
             complaints_list.extend(sheet_data['nature_of_complaint'].dropna().tolist())
         else:
