@@ -445,7 +445,7 @@ if user_query:
                     response['output'] = f"Number of battery breakdowns for FIAT DOBLO: {result}"
                     st.write(f"**Your Query:** {user_query}")
                     st.write("Response:")
-                    st.write(f"There have been a total of {result} battery breakdowns reported for this Fiat Doblo over its lifespan. these are all the breakdowns:(list out the issues). These issues primarily occurred during colder months and were often associated with low battery charge or corrosion. ")
+                    st.write(f"There have been a total of {result} battery breakdowns reported for this Fiat Doblo over its lifespan. These issues primarily occurred during colder months and were often associated with low battery charge or corrosion. ")
             else:
                 # Call chat_with_single_excel_1() for other types of queries
                 response = chat_with_single_excel_1([issues_df, final_concatenated_df, consolidated], user_query)
