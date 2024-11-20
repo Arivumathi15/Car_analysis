@@ -14,7 +14,7 @@ load_dotenv()
 
 # Initialize the chat model
 llm_1 = ChatOpenAI(
-    temperature=0, model="gpt-4-32k", openai_api_key=os.getenv("OPENAI_API_KEY"), streaming=True
+    temperature=0, model="gpt-4o", openai_api_key=os.getenv("OPENAI_API_KEY"), streaming=True
 )
 
 client = OpenAI(
