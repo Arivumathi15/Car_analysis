@@ -347,6 +347,7 @@ with st.sidebar:
         st.session_state.history = []
 
 consolidated = None
+issues_df = None
 
 # File upload and processing
 if "processed_data" not in st.session_state:
