@@ -251,6 +251,7 @@ def chat_with_single_excel_1(df, query):
          query: How many battery breakdowns are there within the lifespan of this Fiat Doblo? 
          answer: There have been a total of 76 battery breakdowns reported for this Fiat Doblo over its lifespan. these are all the breakdowns:(list out the issues). These issues primarily occurred during colder months and were often associated with low battery charge or corrosion.
          query: What are the top 3 faults that occurred for this vehicle? 
+         action: for this question search the faults in 'nature_of_complaint' column don't go with other columns.
          answer: The top 3 most frequent faults reported for this Fiat Doblo are:
                  Power Train & Engine - 12 issues/faults
                  Other Maintenance - 8 issues/faults
